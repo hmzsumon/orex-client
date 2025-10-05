@@ -5,7 +5,7 @@ if (process.env.NODE_ENV === "development") {
   console.log("Running in development mode");
 } else {
   //Global-X-api-1901b8e6064a.herokuapp.com/
-  https: baseUrl = "https://Orex-trade-api-de5130f4c952.herokuapp.com";
+  https: baseUrl = "https://orex-trade-api-eded9c2b17a0.herokuapp.com";
   // Code specific to production mode
   console.log("Running in production mode");
 }
