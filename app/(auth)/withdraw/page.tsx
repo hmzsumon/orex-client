@@ -33,7 +33,7 @@ const WithdrawPage = () => {
   const handleAmountChange = (e: any) => {
     const value = e.target.value;
     setAmount(value);
-    if (value < 10) {
+    if (value < 15) {
       setErrorText("Minimum amount is 10 USDT");
       return;
     } else if (value > availableAmount) {
@@ -135,7 +135,7 @@ const WithdrawPage = () => {
                   </span>
                   <span>
                     Min Amount:
-                    <span className="mx-1  font-bold">10</span>
+                    <span className="mx-1  font-bold">15</span>
                     USDT
                   </span>
                 </small>

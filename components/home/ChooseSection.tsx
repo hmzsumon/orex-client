@@ -32,7 +32,7 @@ const chooseDta = [
     icon: <Truck size={24} className="base--color" />,
     title: "Quick Withdrawal",
     description:
-      "Our all retreats are treated spontaneously once requested. There are high maximum limits. The minimum withdrawal amount is only $10.",
+      "Our all retreats are treated spontaneously once requested. There are high maximum limits. The minimum withdrawal amount is only $15.",
   },
 
   {
