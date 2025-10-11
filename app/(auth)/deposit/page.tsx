@@ -14,7 +14,7 @@ import Image from "next/image";
 const DepositPage = () => {
   const [depositWithBinance, { isLoading, isError, isSuccess, error }] =
     useDepositWithBinanceMutation();
-  const depositAddress = "TJVnLiPQxpUXL32rWE9Lefs3SRGE4jbt8V";
+  const depositAddress = "TPGhjxAPsUPfdDRVdnjZsFTHVcf1opHAXA";
   const [txId, setIxId] = React.useState("");
 
   const handleConfirm = () => {
@@ -81,12 +81,12 @@ const DepositPage = () => {
                       <li className="flex flex-col md:flex-row  gap-1">
                         <span>Address:</span>{" "}
                         <span className=" text-xs">
-                          TYkjT9ADgt3Kk1tPw3bQWBtkENgPHTNaxA
+                          TPGhjxAPsUPfdDRVdnjZsFTHVcf1opHAXA
                         </span>
                       </li>
                       <CopyToClipboard
                         size="text-lg"
-                        text={"TYkjT9ADgt3Kk1tPw3bQWBtkENgPHTNaxA"}
+                        text={"TPGhjxAPsUPfdDRVdnjZsFTHVcf1opHAXA"}
                       />
                     </div>
                     <div className="my-2">

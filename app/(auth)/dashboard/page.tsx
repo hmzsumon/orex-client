@@ -14,6 +14,7 @@ const Dashboard = () => {
   const { data, isLoading, isError, isSuccess, error } =
     useGetDashboardQuery(undefined);
   const { dashboardData } = data || {};
+  console.log(dashboardData);
   return (
     <div>
       <DashboardTop />
@@ -51,7 +52,7 @@ const Dashboard = () => {
           is_btn={false}
         />
         <DashboardCard
-          title="Total Generation"
+          title="Total Uni Level Earning"
           amount={dashboardData?.generation_earning || 0}
           icon={Bag_1}
           is_btn={false}

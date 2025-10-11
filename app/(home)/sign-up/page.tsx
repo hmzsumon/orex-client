@@ -55,7 +55,10 @@ const SignUpPage = () => {
     }
 
     if (registerIsError) {
-      toast.error((registerError as fetchBaseQueryError).data.message);
+      toast.error(
+        (registerError as fetchBaseQueryError).data?.message ||
+          "!Something went wrong please try again"
+      );
     }
   }, [isRegisterSuccess, registerIsError, registerError]);
 
@@ -156,7 +159,7 @@ const SignUpPage = () => {
         phone,
         password,
         country,
-        referralCode: referralCode ? referralCode : "OREX702507",
+        referralCode: referralCode ? referralCode : "OREX702504",
       };
       registerUser(data);
     }
