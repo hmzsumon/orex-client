@@ -74,7 +74,6 @@ const PlanCard = ({ pkg }: any) => {
         <ul className="package-card__features mt-4">
           <li>Return: {pkg.return}</li>
           <li>{pkg.days}</li>
-          <li>{pkg.duration}</li>
           <li>
             Total Return: <span className="font-bold">2x</span>
           </li>

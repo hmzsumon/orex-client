@@ -52,7 +52,7 @@ const AuthLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
                 </Link>
               </div>
             </header>
-            <div className={`px-6 py-4 ${josefinSans.className}`}>
+            <div className={`px-3 py-4 ${josefinSans.className}`}>
               {children}
             </div>
           </main>

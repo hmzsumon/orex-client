@@ -156,6 +156,10 @@ const data = {
           title: "Security ",
           url: "/settings/security",
         },
+        {
+          title: "Kyc Verification",
+          url: "/kyc",
+        },
       ],
     },
   ],

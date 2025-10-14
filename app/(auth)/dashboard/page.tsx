@@ -38,7 +38,7 @@ const Dashboard = () => {
         />
         <DashboardCard
           title="Earning Balance"
-          amount={user?.m_balance || 0}
+          amount={user?.e_balance || 0}
           icon={Bag_1}
           is_btn={true}
           btn_text="Withdraw"

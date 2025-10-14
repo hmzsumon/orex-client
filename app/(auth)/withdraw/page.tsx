@@ -25,7 +25,7 @@ const WithdrawPage = () => {
 
   // set available amount
   useEffect(() => {
-    const balance = user?.m_balance;
+    const balance = user?.e_balance;
     setAvailable(balance);
   }, [user]);
 
@@ -34,7 +34,7 @@ const WithdrawPage = () => {
     const value = e.target.value;
     setAmount(value);
     if (value < 15) {
-      setErrorText("Minimum amount is 10 USDT");
+      setErrorText("Minimum amount is 15 USDT");
       return;
     } else if (value > availableAmount) {
       setErrorText("Insufficient balance");
@@ -93,7 +93,7 @@ const WithdrawPage = () => {
               <h2 className="text-3xl md:text-4xl font-bold leading-tight">
                 <span className="base--color"> Withdraw</span>
               </h2>
-              <p>
+              <p className=" text-sm mt-2">
                 At Orex Trade, we provide a seamless process for withdrawing
                 your earnings securely and efficiently.
               </p>
@@ -102,7 +102,7 @@ const WithdrawPage = () => {
           <div className="account-card__body">
             <h3 className="text-center text-xl font-bold">
               Available Balance:{" "}
-              {user?.m_balance.toLocaleString("en-US", {
+              {user?.e_balance.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
                 minimumFractionDigits: 2,
@@ -122,9 +122,9 @@ const WithdrawPage = () => {
                 <small className="flex items-center justify-between px-1 mt-1 text-gray-100">
                   <span className="">
                     Available:
-                    {user?.m_balance >= 0 ? (
+                    {user?.e_balance >= 0 ? (
                       <span className="mx-1  font-bold">
-                        {Number(user?.m_balance ? user?.m_balance : 0).toFixed(
+                        {Number(user?.e_balance ? user?.e_balance : 0).toFixed(
                           2
                         )}
                       </span>
