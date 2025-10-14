@@ -34,7 +34,7 @@ export default function StepStatus({ status }: { status: KycStatus }) {
         <span className="text-muted">Under review</span>
       </div>
       <p className="text-muted mt-6">
-        Your documents are being reviewed. This usually takes 1–5 minutes.
+        Your documents are being reviewed. This usually takes 24 hours.
       </p>
     </div>
   );

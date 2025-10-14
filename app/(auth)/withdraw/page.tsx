@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import PulseLoader from "react-spinners/PulseLoader";
 import { toast } from "react-toastify";
 
+const FEE_RATE = 0.09; // ৯% চার্জ
+
 const WithdrawPage = () => {
   const { user } = useSelector((state: any) => state.auth);
 
@@ -15,47 +17,68 @@ const WithdrawPage = () => {
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<string>("");
   const [amountError, setAmountError] = useState(false);
   const [address, setAddress] = useState("");
   const [availableAmount, setAvailable] = useState<number>(0);
+
+  const [feeAmount, setFeeAmount] = useState<number>(0);
   const [receiveAmount, setReceiveAmount] = useState<number>(0);
+
   const [errorText, setErrorText] = React.useState<string>("");
-  const [codeError, setCodeError] = useState<boolean>(false);
 
   // set available amount
   useEffect(() => {
-    const balance = user?.e_balance;
+    const balance = Number(user?.e_balance || 0);
     setAvailable(balance);
   }, [user]);
 
   // handle amount change
-  const handleAmountChange = (e: any) => {
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAmount(value);
-    if (value < 15) {
-      setErrorText("Minimum amount is 15 USDT");
+
+    const n = parseFloat(value);
+    if (Number.isNaN(n)) {
+      setErrorText("Enter a valid amount");
+      setFeeAmount(0);
+      setReceiveAmount(0);
       return;
-    } else if (value > availableAmount) {
+    }
+
+    if (n < 15) {
+      setErrorText("Minimum amount is 15 USDT");
+      setFeeAmount(0);
+      setReceiveAmount(0);
+      return;
+    } else if (n > availableAmount) {
       setErrorText("Insufficient balance");
+      setFeeAmount(0);
+      setReceiveAmount(0);
       return;
     } else {
       setErrorText("");
     }
 
-    setReceiveAmount(Number(value) - Number(value) * 0.05 - 1);
+    const fee = n * FEE_RATE; // ৯% ফি
+    const receive = n - fee; // ইউজার যে এমাউন্ট পাবেন
+    setFeeAmount(fee);
+    setReceiveAmount(receive);
   };
 
   // handle submit form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log('submitting form');
+
+    const n = parseFloat(amount);
+    if (Number.isNaN(n) || !!errorText || !address || !password) return;
+
     const data = {
-      amount: amount,
+      amount: n,
       net_amount: receiveAmount,
       password: password,
-      charge_p: 0.05,
-      charge_a: 1,
+      charge_p: FEE_RATE, // ✅ 0.09 = ৯%
+      charge_a: 0,
       method: {
         name: "Tether (USDT TRC20)",
         network: "Tron (TRC20)",
@@ -73,15 +96,27 @@ const WithdrawPage = () => {
       setAmount("");
       setAddress("");
       setPassword("");
+      setFeeAmount(0);
+      setReceiveAmount(0);
     }
     if (isError) {
-      if ("data" in error) {
-        toast.error((error.data as { message: string }).message);
+      if ("data" in (error as any)) {
+        toast.error((error as any).data?.message);
       } else {
         toast.error("An error occurred");
       }
     }
   }, [isSuccess, isError]);
+
+  const fmt = (n: number) =>
+    (n ?? 0).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+  const maxReceivable = availableAmount * (1 - FEE_RATE); // টপ ইনফো: এভেইলেবল থেকে ৯% বাদ দিলে
 
   return (
     <div className="flex items-center justify-center mt-32 md:mt-10 ">
@@ -99,31 +134,39 @@ const WithdrawPage = () => {
               </p>
             </div>
           </div>
-          <div className="account-card__body">
+
+          <div className="account-card__body space-y-3">
             <h3 className="text-center text-xl font-bold">
               Available Balance:{" "}
-              {user?.e_balance.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {user?.e_balance >= 0 ? (
+                <>{fmt(Number(user?.e_balance || 0))}</>
+              ) : (
+                <PulseLoader size={10} color={"#fff"} />
+              )}
             </h3>
+
+            <p className="text-center text-sm opacity-80">
+              Max receivable (after 9% fee):{" "}
+              <strong>{fmt(maxReceivable)}</strong>
+            </p>
+
             <form className="mt-4 space-y-4 " onSubmit={handleSubmit}>
               <div className="space-y-2">
                 <label>Amount to Withdraw</label>
                 <input
                   type="number"
+                  min={0}
+                  step="0.01"
                   className="form-control focus:outline-none focus:ring-1 focus:ring-[rgba(204,163,84,0.5)] focus:bg-transparent"
                   placeholder="Enter amount"
                   value={amount}
                   onChange={handleAmountChange}
                 />
                 <small className="flex items-center justify-between px-1 mt-1 text-gray-100">
-                  <span className="">
-                    Available:
+                  <span>
+                    Available:&nbsp;
                     {user?.e_balance >= 0 ? (
-                      <span className="mx-1  font-bold">
+                      <span className="mx-1 font-bold">
                         {Number(user?.e_balance ? user?.e_balance : 0).toFixed(
                           2
                         )}
@@ -134,14 +177,33 @@ const WithdrawPage = () => {
                     USDT
                   </span>
                   <span>
-                    Min Amount:
-                    <span className="mx-1  font-bold">15</span>
+                    Min Amount:&nbsp;<span className="mx-1 font-bold">15</span>
                     USDT
                   </span>
                 </small>
                 {errorText && (
                   <small className="text-red-500 font-bold">{errorText}</small>
                 )}
+              </div>
+
+              {/* Summary card for fee & receive */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+                  <p className="text-xs opacity-80">Entered Amount</p>
+                  <p className="text-base font-semibold">
+                    {fmt(parseFloat(amount) || 0)}
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+                  <p className="text-xs opacity-80">Fee (9%)</p>
+                  <p className="text-base font-semibold">{fmt(feeAmount)}</p>
+                </div>
+                <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+                  <p className="text-xs opacity-80">You’ll receive</p>
+                  <p className="text-base font-semibold">
+                    {fmt(receiveAmount)}
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -158,7 +220,7 @@ const WithdrawPage = () => {
                 />
                 {amountError && (
                   <p className="text-red-500 text-xs">
-                    Please enter a valid email
+                    Please enter a valid address
                   </p>
                 )}
               </div>
@@ -187,9 +249,15 @@ const WithdrawPage = () => {
                 <button
                   className="cmn-btn font-bold w-full disabled:opacity-50 disabled:cursor-not-allowed"
                   type="submit"
-                  disabled={!!errorText || !amount || !address || !password}
+                  disabled={
+                    !!errorText ||
+                    !amount ||
+                    !address ||
+                    !password ||
+                    (parseFloat(amount) || 0) <= 0
+                  }
                 >
-                  Withdraw
+                  {isLoading ? "Processing..." : "Withdraw"}
                 </button>
               </div>
             </form>
