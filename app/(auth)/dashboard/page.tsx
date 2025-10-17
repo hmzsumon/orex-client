@@ -14,7 +14,7 @@ const Dashboard = () => {
   const { data, isLoading, isError, isSuccess, error } =
     useGetDashboardQuery(undefined);
   const { dashboardData } = data || {};
-  console.log(dashboardData);
+
   return (
     <div>
       <DashboardTop />

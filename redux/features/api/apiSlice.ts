@@ -2,7 +2,6 @@ import baseUrl from "@/config/baseUrl";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const url = `${baseUrl}/api/v1`;
-console.log("url", url);
 export const apiSlice = createApi({
   reducerPath: "api",
 
@@ -36,6 +35,7 @@ export const apiSlice = createApi({
     "Transaction",
     "Kyc",
     "KYC",
+    "UnreadCount",
   ],
   endpoints: (builder) => ({}),
 });

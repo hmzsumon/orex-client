@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import NotificationBell from "@/components/NotificationBell";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,10 +13,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import Logo from "@/public/logo_1.png";
-import { Bell } from "lucide-react";
 import localFont from "next/font/local";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 
 const josefinSans = localFont({
@@ -45,11 +44,9 @@ const AuthLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
                   </BreadcrumbList>
                 </Breadcrumb>
               </div>
-
+              {/* ────────── notification ball ────────── */}
               <div className="flex-1 flex items-center justify-end px-4">
-                <Link href="/notifications">
-                  <Bell className=" cursor-pointer" />
-                </Link>
+                <NotificationBell />
               </div>
             </header>
             <div className={`px-3 py-4 ${josefinSans.className}`}>

@@ -1,41 +1,37 @@
-import { apiSlice } from '../api/apiSlice';
+// redux/features/notify/notificationApi.ts
+import { apiSlice } from "../api/apiSlice";
 
 export const notificationApi = apiSlice.injectEndpoints({
-	endpoints: (builder) => ({
-		getNotifications: builder.query({
-			query: () => '/notifications',
-			providesTags: ['Notification', 'Notifications'],
-		}),
+  endpoints: (builder) => ({
+    getNotifications: builder.query({
+      query: () => "/my-notifications",
+      providesTags: ["Notification", "Notifications"],
+    }),
+    updateNotificationStatus: builder.mutation({
+      query: () => ({
+        url: "/update-all-notifications",
+        method: "PUT",
+      }),
+      invalidatesTags: ["Notification", "Notifications", "UnreadCount"],
+    }),
+    getUnreadCount: builder.query<{ success: boolean; count: number }, void>({
+      query: () => "/notifications/unread-count",
+      providesTags: ["UnreadCount"],
+    }),
 
-		// updateNotification
-		updateNotification: builder.mutation({
-			query: ({ id }) => ({
-				url: `/notification/${id}`,
-				method: 'PUT',
-			}),
-			invalidatesTags: ['Notification', 'Notifications'],
-		}),
-
-		// logged in user notifications
-		getMyNotifications: builder.query({
-			query: () => '/my-notifications',
-			providesTags: ['Notification'],
-		}),
-
-		// update notification is_read status
-		updateNotificationStatus: builder.mutation({
-			query: () => ({
-				url: `/update-all-notifications`,
-				method: 'PUT',
-			}),
-			invalidatesTags: ['Notification'],
-		}),
-	}),
+    deleteNotification: builder.mutation({
+      query: ({ id }: { id: string }) => ({
+        url: `/notification/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Notification", "Notifications", "UnreadCount"],
+    }),
+  }),
 });
 
 export const {
-	useGetNotificationsQuery,
-	useGetMyNotificationsQuery,
-	useUpdateNotificationMutation,
-	useUpdateNotificationStatusMutation,
+  useGetNotificationsQuery,
+  useUpdateNotificationStatusMutation,
+  useGetUnreadCountQuery,
+  useDeleteNotificationMutation,
 } = notificationApi;
